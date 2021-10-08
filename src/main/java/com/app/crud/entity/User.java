@@ -9,6 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * arugji 
+ * CIS175 fall 2021
+ * Oct 5
+ */
+
 @Entity
 @Table(name = "user")
 public class User implements Serializable {

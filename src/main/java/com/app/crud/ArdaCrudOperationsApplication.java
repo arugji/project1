@@ -10,11 +10,13 @@ import javax.persistence.PersistenceContext;
 import com.app.crud.entity.User;
 import com.app.crud.util.EntityManagerUtil;
 
-/**
- * 
+ /**
+ * arugji 
+ * CIS175 fall 2021
+ * Oct 5
+ *
  * Actual execution for application.
- * 
- * */
+ */
 public class ArdaCrudOperationsApplication {
 
 	@PersistenceContext
