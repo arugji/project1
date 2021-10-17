@@ -4,23 +4,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import com.app.crud.entity.User;
-import com.app.crud.util.EntityManagerUtil;
+import com.app.crud.util.ListHelper;
 
- /**
- * arugji 
- * CIS175 fall 2021
- * Oct 5
+/**
+ * arugji CIS175 fall 2021 Oct 5
  *
  * Actual execution for application.
  */
 public class ArdaCrudOperationsApplication {
 
-	@PersistenceContext
-	private EntityManager entityManager = EntityManagerUtil.getEntityManager();
+	private ListHelper lh = new ListHelper();
 
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);
@@ -60,15 +54,10 @@ public class ArdaCrudOperationsApplication {
 
 	public void showAll() {
 		System.out.print("\n\n");
-
-		entityManager.getTransaction().begin();
-		@SuppressWarnings("unchecked")
-		List<User> list = (List<User>) entityManager.createQuery("SELECT u FROM User u").getResultList();
+		List<User> list = lh.showAll();
 		for (User u : list) {
 			System.out.println(u.getId() + " --- " + u.getName());
 		}
-
-		entityManager.getTransaction().commit();
 	}
 
 	public void add() {
@@ -81,10 +70,7 @@ public class ArdaCrudOperationsApplication {
 		User usr = new User();
 		usr.setName(name);
 
-		if (!entityManager.getTransaction().isActive())
-			entityManager.getTransaction().begin();
-		entityManager.persist(usr);
-		entityManager.getTransaction().commit();
+		lh.inserUser(usr);
 
 		System.out.print("\n" + name + " saved succesfully...");
 		showAll();
@@ -106,8 +92,7 @@ public class ArdaCrudOperationsApplication {
 			return;
 		}
 
-		entityManager.getTransaction().begin();
-		User usr = entityManager.find(User.class, id);
+		User usr = lh.searchById(id);
 
 		if (Objects.isNull(usr)) {
 			System.out.print("\n\nId not present in above list. Please enter valid id.");
@@ -121,8 +106,7 @@ public class ArdaCrudOperationsApplication {
 			usr.setName(name);
 		}
 
-		entityManager.merge(usr);
-		entityManager.getTransaction().commit();
+		lh.updateUser(usr);
 
 		System.out.print("\n" + name + " updated succesfully...");
 		showAll();
@@ -143,8 +127,7 @@ public class ArdaCrudOperationsApplication {
 			return;
 		}
 
-		entityManager.getTransaction().begin();
-		User usr = entityManager.find(User.class, id);
+		User usr = lh.searchById(id);
 
 		if (Objects.isNull(usr)) {
 			System.out.print("\n\nId not present in above list. Please enter valid id.");
@@ -155,8 +138,7 @@ public class ArdaCrudOperationsApplication {
 		String isSure = deleteIn.next();
 
 		if (isSure.equalsIgnoreCase("y")) {
-			entityManager.remove(usr);
-			entityManager.getTransaction().commit();
+			lh.deleteUser(usr);
 			System.out.print("\n" + usr.getName() + " deleted succesfully...");
 			showAll();
 		} else {
